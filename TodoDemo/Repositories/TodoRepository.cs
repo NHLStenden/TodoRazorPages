@@ -8,18 +8,21 @@ namespace TodoDemo.Repositories
     {
         private static List<Todo> _todos = new List<Todo>()
         {
-            new Todo() {TodoId = 1, Description = "Aa 1", Done = false},
-            new Todo() {TodoId = 2, Description = "Bb 2", Done = true}
+            new Todo() {TodoId = 1, Description = "Aa 1", Done = false, UserId = 1},
+            new Todo() {TodoId = 2, Description = "Bb 2", Done = true, UserId = 2},
+            new Todo() {TodoId = 3, Description = "Cc 3", Done = true, UserId = 1}
         };
 
-        public List<Todo> Get(string filter)
+        public List<Todo> Get(string filter, int userId)
         {
+            var result = _todos.Where(x => x.UserId == userId);
+            
             if (!string.IsNullOrWhiteSpace(filter))
             {
-                return _todos.Where(x => x.Description.Contains(filter)).ToList(); 
+                return result.Where(x => x.Description.Contains(filter)).ToList(); 
             }
 
-            return _todos;
+            return result.ToList();
         }
         
         public Todo Get(int todoId)
@@ -27,9 +30,10 @@ namespace TodoDemo.Repositories
             return _todos.Find(x => x.TodoId == todoId);
         }
 
-        public void Add(Todo newTodo)
+        public void Add(Todo newTodo, int userId)
         {
             newTodo.TodoId = _todos.Max(x => x.TodoId) + 1;
+            newTodo.UserId = userId;
             _todos.Add(newTodo);    
         }
 
@@ -37,7 +41,6 @@ namespace TodoDemo.Repositories
         {
             _todos = _todos.Where(x => x.TodoId != todoId).ToList();
         }
-
 
         public void Update(Todo edit)
         {

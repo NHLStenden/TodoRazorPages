@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TodoDemo.Models;
@@ -18,6 +19,10 @@ namespace TodoDemo.Pages
         public IActionResult OnPost()
         {
             new TodoRepository().Update(Edit);
+            
+            TempData["updatedObject"] = Edit.Description;
+            //Response.Cookies.Append("updatedObject", Edit.Description, new CookieOptions());
+            
             return RedirectToPage("TodoList");
         }
     }

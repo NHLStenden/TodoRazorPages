@@ -1,22 +1,24 @@
 @page
 @model TodoDemo.Pages.TodoList
 
+@if (Model.Description != null)
+{
+    <p>Bedankt voor het updaten van "@Model.Description"</p>
+}
+
 <ul>
     @foreach (var todo in Model.Todos)
     {
-        <li>@todo.Description -- @todo.Done -- @todo.TodoId
-        
-            <form method="post" asp-page-handler="delete">
-                <input type="hidden" name="todoId" value="@todo.TodoId">
-                <button type="submit">Delete</button>
-            </form>
-            <a href="TodoEdit?todoId=@todo.TodoId">Edit</a>
-        </li>
+        <partial name="_DisplayTodoItem" model=todo></partial>
     }
 </ul>
 
-<form method="post" >
-    Description: <input asp-for="NewTodo.Description"><br>
+<form method="post">
+        Description: <input asp-for="NewTodo.Description"> 
+        <span asp-validation-for="NewTodo.Description"></span>
+    <br>
+    
+    
     Done: <input asp-for="NewTodo.Done"><br>
     <button type="submit" asp-page-handler="add">Add Todo</button>
 </form>

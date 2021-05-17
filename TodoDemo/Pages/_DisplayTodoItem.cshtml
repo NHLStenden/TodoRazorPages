@@ -1,0 +1,10 @@
+@model TodoDemo.Models.Todo
+
+<li>@Model.Description -- @Model.Done -- @Model.TodoId
+        
+    <form method="post" asp-page-handler="delete">
+        <input type="hidden" name="todoId" value="@Model.TodoId">
+        <button type="submit">Delete</button>
+    </form>
+    <a href="TodoEdit?todoId=@Model.TodoId">Edit</a>
+</li>
