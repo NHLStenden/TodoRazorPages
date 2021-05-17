@@ -1,0 +1,22 @@
+@page
+@model TodoDemo.Pages.TodoList
+
+<ul>
+    @foreach (var todo in Model.Todos)
+    {
+        <li>@todo.Description -- @todo.Done -- @todo.TodoId
+        
+            <form method="post" asp-page-handler="delete">
+                <input type="hidden" name="todoId" value="@todo.TodoId">
+                <button type="submit">Delete</button>
+            </form>
+            <a href="TodoEdit?todoId=@todo.TodoId">Edit</a>
+        </li>
+    }
+</ul>
+
+<form method="post" >
+    Description: <input asp-for="NewTodo.Description"><br>
+    Done: <input asp-for="NewTodo.Done"><br>
+    <button type="submit" asp-page-handler="add">Add Todo</button>
+</form>

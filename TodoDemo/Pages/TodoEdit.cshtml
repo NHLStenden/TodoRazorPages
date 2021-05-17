@@ -1,0 +1,9 @@
+@page
+@model TodoDemo.Pages.TodoEdit
+
+<form method="post">
+    <input type="hidden" asp-for="Edit.TodoId">
+    Description: <input asp-for="Edit.Description"><br>
+    Done: <input asp-for="Edit.Done"><br>
+    <button type="submit">Update</button>
+</form>
