@@ -19,10 +19,10 @@ namespace TodoDemo.Pages
         public IActionResult OnPost()
         {
             new TodoRepository().Update(Edit);
-            
-            TempData["updatedObject"] = Edit.Description;
+
+            TempData["updatedObject"] = $"Bedankt voor het updaten van {Edit.Description}";
             //Response.Cookies.Append("updatedObject", Edit.Description, new CookieOptions());
-            
+
             return RedirectToPage("TodoList");
         }
     }

@@ -1,9 +1,9 @@
 @page
 @model TodoDemo.Pages.TodoList
 
-@if (Model.Description != null)
+@if (Model.StatusMessage != null)
 {
-    <p>Bedankt voor het updaten van "@Model.Description"</p>
+    <p>@Model.StatusMessage</p>
 }
 
 <ul>
@@ -14,11 +14,9 @@
 </ul>
 
 <form method="post">
-        Description: <input asp-for="NewTodo.Description"> 
-        <span asp-validation-for="NewTodo.Description"></span>
+    Description: <input asp-for="NewTodo.Description"> 
+    <span asp-validation-for="NewTodo.Description"></span>
     <br>
-    
-    
     Done: <input asp-for="NewTodo.Done"><br>
     <button type="submit" asp-page-handler="add">Add Todo</button>
 </form>

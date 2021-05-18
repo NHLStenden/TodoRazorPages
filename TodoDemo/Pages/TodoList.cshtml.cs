@@ -17,25 +17,7 @@ namespace TodoDemo.Pages
                 return new TodoRepository().Get(Request.Query["filter"], UserId);
             }
         }
-
-        public void OnGet()
-        {
-            Description = TempData["updatedObject"]?.ToString();
-        }
-
-        public string Description { get; set; }
-
-        [BindProperty]
-        public Todo NewTodo { get; set; }
         
-        public void OnPostAdd()
-        {
-            if (ModelState.IsValid)
-            {
-                new TodoRepository().Add(NewTodo, UserId);
-            }
-        }
-
         public int UserId
         {
             get
@@ -53,11 +35,33 @@ namespace TodoDemo.Pages
             }
         }
 
+        public void OnGet()
+        {
+            StatusMessage = TempData["updatedObject"]?.ToString();
+        }
+
+        public string StatusMessage { get; set; }
+
+        [BindProperty]
+        public Todo NewTodo { get; set; }
+        
+        public void OnPostAdd()
+        {
+            if (ModelState.IsValid)
+            {
+                new TodoRepository().Add(NewTodo, UserId);
+            }
+
+            StatusMessage = $"Todo {NewTodo.Description} added with Id: ${NewTodo.TodoId}";
+        }
+
         public void OnPostDelete()
         {
             int todoId = Int32.Parse(Request.Form["todoId"]);
 
             new TodoRepository().Delete(todoId);
+
+            StatusMessage = $"Deleted Todo with Id: {NewTodo.TodoId}";
         }
     }
 }
