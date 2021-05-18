@@ -52,7 +52,7 @@ namespace TodoDemo.Pages
                 new TodoRepository().Add(NewTodo, UserId);
             }
 
-            StatusMessage = $"Todo {NewTodo.Description} added with Id: ${NewTodo.TodoId}";
+            StatusMessage = $"Added Todo \"{NewTodo.Description}\" with Id: ${NewTodo.TodoId}";
         }
 
         public void OnPostDelete()
@@ -61,7 +61,7 @@ namespace TodoDemo.Pages
 
             new TodoRepository().Delete(todoId);
 
-            StatusMessage = $"Deleted Todo with Id: {NewTodo.TodoId}";
+            StatusMessage = $"Deleted Todo \"{NewTodo.Description}\" with Id: {NewTodo.TodoId}";
         }
     }
 }

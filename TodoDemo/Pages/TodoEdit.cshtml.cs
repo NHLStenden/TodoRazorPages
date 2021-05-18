@@ -20,7 +20,7 @@ namespace TodoDemo.Pages
         {
             new TodoRepository().Update(Edit);
 
-            TempData["updatedObject"] = $"Bedankt voor het updaten van {Edit.Description}";
+            TempData["updatedObject"] = $"Edited Todo \"{Edit.Description}\" with Id: ${Edit.TodoId}";
             //Response.Cookies.Append("updatedObject", Edit.Description, new CookieOptions());
 
             return RedirectToPage("TodoList");
