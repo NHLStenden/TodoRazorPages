@@ -6,6 +6,12 @@
     <p>@Model.StatusMessage</p>
 }
 
+<form method="get">
+    <input type="text" name="filter">
+    <button type="submit">Search</button>
+</form>
+<hr>
+
 <ul>
     @foreach (var todo in Model.Todos)
     {
@@ -13,6 +19,7 @@
     }
 </ul>
 
+<hr>
 <form method="post">
     Description: <input asp-for="NewTodo.Description"> 
     <span asp-validation-for="NewTodo.Description"></span>

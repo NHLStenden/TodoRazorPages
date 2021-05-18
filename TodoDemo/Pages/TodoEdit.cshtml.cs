@@ -11,7 +11,7 @@ namespace TodoDemo.Pages
         [BindProperty]
         public Todo Edit { get; set; }
         
-        public void OnGet(int todoId)
+        public void OnGet([FromRoute] int todoId)
         {
             Edit = new TodoRepository().Get(todoId);
         }
@@ -20,7 +20,7 @@ namespace TodoDemo.Pages
         {
             new TodoRepository().Update(Edit);
 
-            TempData["updatedObject"] = $"Edited Todo \"{Edit.Description}\" with Id: ${Edit.TodoId}";
+            TempData["updatedObject"] = $"Edited Todo \"{Edit.Description}\" with Id: {Edit.TodoId}";
             //Response.Cookies.Append("updatedObject", Edit.Description, new CookieOptions());
 
             return RedirectToPage("TodoList");

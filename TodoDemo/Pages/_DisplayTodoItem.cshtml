@@ -1,10 +1,13 @@
 @model TodoDemo.Models.Todo
 
-<li>@Model.Description -- @Model.Done -- @Model.TodoId
-        
-    <form method="post" asp-page-handler="delete">
-        <input type="hidden" name="todoId" value="@Model.TodoId">
-        <button type="submit">Delete</button>
-    </form>
-    <a href="TodoEdit?todoId=@Model.TodoId">Edit</a>
+<li>
+    <div>
+        <form method="post" asp-page-handler="delete" class="form-inline">
+            @Model.Description -- @Model.Done -- @Model.TodoId
+            <input type="hidden" name="todoId" value="@Model.TodoId">
+            <button type="submit" class="btn btn-danger">Delete</button>
+
+            <a asp-page="@nameof(TodoEdit)" asp-route-todoId="@Model.TodoId" class="btn btn-primary">Edit</a>
+        </form>
+    </div>
 </li>
