@@ -1,19 +1,8 @@
 @page
 @model TodoDemo.Pages.Login
 
-@{
-    Layout = "Shared/_Layout";
-}
-
-
-
 <form method="post">
     <button type="submit" asp-page-handler="loginUser1">User 1</button>
     <button type="submit" asp-page-handler="loginUser2">User 2</button>
-    <button type="submit" asp-page-handler="logout">User 2</button>
+    <button type="submit" asp-page-handler="logout">Log out</button>
 </form>
-
-@section Scripts
-{ 
-    <script src=""></script>
-}

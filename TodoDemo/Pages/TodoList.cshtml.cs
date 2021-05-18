@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -22,13 +21,9 @@ namespace TodoDemo.Pages
         public void OnGet()
         {
             Description = TempData["updatedObject"]?.ToString();
-            //Description = Request.Cookies["updatedObject"];
-
-//            Response.Cookies.Append("updateObject", String.Empty);
-            //Response.Cookies.Delete("updatedObject");
         }
 
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         [BindProperty]
         public Todo NewTodo { get; set; }
@@ -50,9 +45,10 @@ namespace TodoDemo.Pages
                 {
                     int userId = int.Parse(userIdStr);
                     return userId;
-                    //return new TodoRepository().Get(Request.Query["filter"], userId);   
                 }
-
+                
+                HttpContext.Response.Redirect(nameof(Login));
+                
                 return -1;
             }
         }

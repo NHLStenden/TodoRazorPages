@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace TodoDemo.Pages
@@ -10,14 +11,16 @@ namespace TodoDemo.Pages
             
         }
 
-        public void OnPostLoginUser1()
+        public IActionResult OnPostLoginUser1()
         {
             HttpContext.Session.SetString("userid", 1.ToString());
+            return RedirectToPage(nameof(TodoList));
         }
         
-        public void OnPostLoginUser2()
+        public IActionResult OnPostLoginUser2()
         {
             HttpContext.Session.SetString("userid", 2.ToString());
+            return RedirectToPage(nameof(TodoList));
         }
 
         public void OnPostLogout()
