@@ -6,9 +6,23 @@ namespace TodoDemo.Pages
 {
     public class Login : PageModel
     {
+        public int UserId
+        {
+            get
+            {
+                string userIdStr = HttpContext.Session.GetString("userid");
+                if (!string.IsNullOrWhiteSpace(userIdStr))
+                {
+                    int userId = int.Parse(userIdStr);
+                    return userId;
+                }
+                
+                return -1;
+            }
+        }
+
         public void OnGet()
         {
-            
         }
 
         public IActionResult OnPostLoginUser1()

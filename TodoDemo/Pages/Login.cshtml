@@ -1,8 +1,17 @@
 @page
 @model TodoDemo.Pages.Login
 
+@if (Model.UserId == -1)
+{
+    <p>Not singed in</p>;
+}
+else
+{
+    <p>Signed in with userId:  @Model.UserId</p>;
+}     
+
 <form method="post">
-    <button type="submit" asp-page-handler="loginUser1">User 1</button>
-    <button type="submit" asp-page-handler="loginUser2">User 2</button>
-    <button type="submit" asp-page-handler="logout">Log out</button>
+    Login in as <button type="submit" asp-page-handler="loginUser1">User 1</button><br>
+    Login in as <button type="submit" asp-page-handler="loginUser2">User 2</button><br>
+    <button type="submit" asp-page-handler="logout">Log out</button><br>
 </form>
