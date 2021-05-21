@@ -1,0 +1,12 @@
+@model TodoDemo.Models.Stats
+
+@if (Model != null)
+{
+    <h2>Todo Stats View Component</h2>
+    <p>Total number of Items: @(Model.CompletedCount + Model.NotCompletedCount)</p>
+    <p>Total number of Completed Items: @Model.CompletedCount</p>
+    <p>Total number of Not Completed Items: @Model.NotCompletedCount</p>
+
+    <hr>    
+}
+

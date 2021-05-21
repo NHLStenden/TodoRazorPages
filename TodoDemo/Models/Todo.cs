@@ -11,6 +11,7 @@ namespace TodoDemo.Models
 
         public bool Done { get; set; }
         
+        [Required]
         public int UserId { get; set; }
     }
 }
