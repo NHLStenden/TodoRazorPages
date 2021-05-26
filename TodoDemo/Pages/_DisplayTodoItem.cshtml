@@ -1,13 +1,39 @@
 @model TodoDemo.Models.Todo
 
-<li>
-    <div>
-        <form method="post" asp-page-handler="delete" class="form-inline">
-            @Model.Description -- @Model.Done -- @Model.TodoId
-            <input type="hidden" name="todoId" value="@Model.TodoId">
-            <button type="submit" class="btn btn-danger">Delete</button>
+<script type="application/javascript">
+    function submitForm(clickedCheckbox) {
+        debugger;
+        var updateCheckBtn = $(clickedCheckbox).closest("form").find("#updateCheckbox");
+        updateCheckBtn.click();
+        //updateCheckBtn.unbind('submit').submit();
+    }
+</script>
 
-            <a asp-page="@nameof(TodoEdit)" asp-route-todoId="@Model.TodoId" class="btn btn-primary">Edit</a>
+<ul class="list-group">
+    <li class="list-group-item">
+        <form method="post" class="form-inline">
+            <input type="hidden" name="todoId" value="@Model.TodoId">
+            <div class="form-group">
+                @if (Model.Done)
+                {
+                    <input checked="checked" data-val="true" data-val-required="The Done field is required."
+                           id="todo_Done" name="todo.Done" type="checkbox" onclick="submitForm(this)">
+                }
+                else
+                {
+                    <input data-val="true" data-val-required="The Done field is required."
+                           id="todo_Done" name="todo.Done" type="checkbox" onclick="submitForm(this)">
+                }
+            </div>
+            <div class="form-group mx-sm-3">
+                @Model.Description -- @Model.Done -- @Model.TodoId
+            </div>
+            <div class="btn-group btn-group-sm" role="group" aria-label="Delete | Edit">
+                <button asp-page-handler="delete" type="submit" class="btn btn-danger">Delete</button>
+                <a asp-page="@nameof(TodoEdit)" asp-route-todoId="@Model.TodoId" class="btn btn-primary">Edit</a>
+                
+            </div>
+            <button style="display: none" id="updateCheckbox" type="submit" asp-page-handler="updateCheckbox" asp-route-todoId=@Model.TodoId>Update</button>
         </form>
-    </div>
-</li>
+    </li>
+</ul>

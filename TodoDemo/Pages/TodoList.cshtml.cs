@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -10,11 +11,12 @@ namespace TodoDemo.Pages
 {
     public class TodoList : PageModel
     {
-        public List<Todo> Todos
+        public IEnumerable<Todo> Todos
         {
             get
             {
-                return new TodoRepository().Get(Filter, UserId);
+                var todos = new TodoRepository().Get(Filter, UserId).ToList();
+                return todos;
             }
         }
 
@@ -43,33 +45,52 @@ namespace TodoDemo.Pages
             }
         }
 
-        public string StatusMessage { get; set; }
-        
-        public void OnGet()
+        public string StatusMessage
         {
-            StatusMessage = TempData["updatedObject"]?.ToString();
+            get
+            {
+                return TempData["StatusMessage"]?.ToString();
+            } 
+            set
+            {
+                TempData["StatusMessage"] = value;
+            }
         }
+
+        public void OnGet()
+        { }
 
         [BindProperty]
         public Todo NewTodo { get; set; }
 
-        public void OnPostAdd()
+        public void OnPostUpdateCheckbox(int todoId, [FromForm(Name = "todo.Done")] string todoDone)
         {
-            if (ModelState.IsValid)
+            bool done = !string.IsNullOrWhiteSpace(todoDone) && todoDone.Contains("on");
+
+            new TodoRepository().UpdateDone(todoId, done, UserId);
+        }
+        
+        public IActionResult OnPostAdd()
+        {
+            if (!ModelState.IsValid)
             {
-                new TodoRepository().Add(NewTodo, UserId);
+                return Page();
             }
 
-            StatusMessage = $"Added Todo \"{NewTodo.Description}\" with Id: {NewTodo.TodoId}";
+            Todo newTodo = new TodoRepository().Add(NewTodo, UserId);
+            StatusMessage = $"Added Todo \"{newTodo.Description}\" with Id: {newTodo.TodoId}";
+
+            //https://stackoverflow.com/questions/52058441/how-can-you-clear-a-bound-property-on-a-razor-pages-model-when-posting
+            return RedirectToPage(nameof(TodoList));
         }
 
-        public void OnPostDelete()
+        public void OnPostDelete([FromForm] int todoId)
         {
-            int todoId = Int32.Parse(Request.Form["todoId"]);
-
+            var todoToDelete = new TodoRepository().Get(todoId);
+            
             new TodoRepository().Delete(todoId);
 
-            StatusMessage = $"Deleted Todo \"{NewTodo.Description}\" with Id: {NewTodo.TodoId}";
+            StatusMessage = $"Deleted Todo \"{todoToDelete.Description}\" with TodoId: {todoToDelete.TodoId}";
         }
     }
 }

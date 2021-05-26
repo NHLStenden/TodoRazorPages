@@ -1,52 +1,80 @@
 using System.Collections.Generic;
 using System.Linq;
+using Dapper;
+using MySql.Data.MySqlClient;
 using TodoDemo.Models;
 
 namespace TodoDemo.Repositories
 {
     public class TodoRepository
     {
-        private static List<Todo> _todos = new List<Todo>()
-        {
-            new Todo() {TodoId = 1, Description = "Aa 1", Done = false, UserId = 1},
-            new Todo() {TodoId = 2, Description = "Bb 2", Done = true, UserId = 2},
-            new Todo() {TodoId = 3, Description = "Cc 3", Done = true, UserId = 1}
-        };
+        private string connectionString = "Server=127.0.0.1;Port=3306;Database=TodoDemo;Uid=root;Pwd=Test@1234!;";
 
-        public List<Todo> Get(string filter, int userId)
+        private MySqlConnection GetConnection()
         {
-            var result = _todos.Where(x => x.UserId == userId);
-            
-            if (!string.IsNullOrWhiteSpace(filter))
-            {
-                return result.Where(x => x.Description.Contains(filter)).ToList(); 
-            }
-
-            return result.ToList();
+            return new MySqlConnection(connectionString);
         }
         
         public Todo Get(int todoId)
         {
-            return _todos.Find(x => x.TodoId == todoId);
+            using var connection = GetConnection();
+            return connection.QuerySingle<Todo>("SELECT * FROM Todo WHERE TodoId = @todoId",
+                new {todoId});
+        }
+        
+        public IEnumerable<Todo> Get(string filter, int userId)
+        {
+            string sql = @"SELECT * FROM Todo 
+                            WHERE (@filter IS NULL OR Description LIKE CONCAT('%', @filter, '%'))
+                                AND 
+                            UserId = @userId ORDER BY TodoId";
+
+            using var connection = GetConnection(); 
+            return connection.Query<Todo>(sql, new { userId, filter } ).ToList();
         }
 
-        public void Add(Todo newTodo, int userId)
+        public Todo Update(Todo edit, int userId)
         {
-            newTodo.TodoId = _todos.Max(x => x.TodoId) + 1;
-            newTodo.UserId = userId;
-            _todos.Add(newTodo);    
+            edit.UserId = userId; //trick
+            string sql = 
+                @"  UPDATE Todo 
+                        SET Description = @Description, Done = @Done
+                        WHERE TodoId = @TodoId AND UserId = @UserId;
+                    SELECT * FROM Todo WHERE TodoId = @TodoId";
+            using var connection = GetConnection();
+            var todo = connection.QuerySingle<Todo>(sql, edit);
+            return todo;
         }
 
-        public void Delete(int todoId)
+        public bool UpdateDone(int todoId, bool done, int userId)
         {
-            _todos = _todos.Where(x => x.TodoId != todoId).ToList();
+            string sql = @"UPDATE Todo 
+                SET Done = @Done
+                WHERE TodoId = @TodoId AND UserId = @UserId";
+            
+            using var connection = GetConnection();
+            int numRowEffected = connection.Execute(sql, new {TodoId = todoId, Done = done, UserId = userId});
+            return numRowEffected == 1;
         }
 
-        public void Update(Todo edit)
+        public Todo Add(Todo newTodo, int userId)
         {
-            Todo itemToUpdate = Get(edit.TodoId);
-            itemToUpdate.Description = edit.Description;
-            itemToUpdate.Done = edit.Done;
+            string sql = @"INSERT INTO Todo (Description, Done, UserId) VALUES (@Description, @Done, @UserId);
+                            SELECT * FROM Todo WHERE TodoId = LAST_INSERT_ID()";
+            
+            using var connection = GetConnection();
+            var todo = connection.QuerySingle<Todo>(sql, 
+                new {Description = newTodo.Description, Done = newTodo.Done, UserId = userId});
+            return todo;
+        }
+
+        public bool Delete(int todoId)
+        {
+            string sql = @"DELETE FROM Todo WHERE TodoId = @TodoId ";
+            
+            using var connection = GetConnection();
+            int numRowEffected = connection.Execute(sql, new {TodoId = todoId});
+            return numRowEffected == 1;         
         }
     }
 }
