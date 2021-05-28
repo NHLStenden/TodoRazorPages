@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TodoDemo.Models;
 using TodoDemo.Repositories;
 
@@ -57,11 +58,20 @@ namespace TodoDemo.Pages
             }
         }
 
+        public IEnumerable<SelectListItem> Categories { get; set; }
+
         public void OnGet()
-        { }
+        {
+            Categories = new CategoryRepository().Get(null, UserId)
+                .Select(x => 
+                    new SelectListItem(x.Name, x.CategoryId.ToString())
+                );
+        }
 
         [BindProperty]
         public Todo NewTodo { get; set; }
+
+        
 
         public void OnPostUpdateCheckbox(int todoId, [FromForm(Name = "todo.Done")] string todoDone)
         {

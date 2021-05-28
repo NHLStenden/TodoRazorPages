@@ -24,13 +24,20 @@ namespace TodoDemo.Repositories
         
         public IEnumerable<Todo> Get(string filter, int userId)
         {
-            string sql = @"SELECT * FROM Todo 
+            string sql = @" SELECT * 
+                            FROM Todo T 
+                                JOIN Category C on T.CategoryId = C.CategoryId
                             WHERE (@filter IS NULL OR Description LIKE CONCAT('%', @filter, '%'))
                                 AND 
-                            UserId = @userId ORDER BY TodoId";
+                            T.UserId = @userId ORDER BY TodoId";
 
-            using var connection = GetConnection(); 
-            return connection.Query<Todo>(sql, new { userId, filter } ).ToList();
+            using var connection = GetConnection();
+            var result = connection.Query<Todo, Category, Todo>(sql, (todo, category) =>
+            {
+                todo.Category = category;
+                return todo;
+            }, splitOn:"CategoryId", param: new { userId, filter });
+            return result;
         }
 
         public Todo Update(Todo edit, int userId)
@@ -38,7 +45,8 @@ namespace TodoDemo.Repositories
             edit.UserId = userId; //trick
             string sql = 
                 @"  UPDATE Todo 
-                        SET Description = @Description, Done = @Done
+                        SET Description = @Description, Done = @Done,
+                            CategoryId = @CategoryId
                         WHERE TodoId = @TodoId AND UserId = @UserId;
                     SELECT * FROM Todo WHERE TodoId = @TodoId";
             using var connection = GetConnection();
@@ -59,12 +67,13 @@ namespace TodoDemo.Repositories
 
         public Todo Add(Todo newTodo, int userId)
         {
-            string sql = @"INSERT INTO Todo (Description, Done, UserId) VALUES (@Description, @Done, @UserId);
+            string sql = @"INSERT INTO Todo (Description, Done, UserId, CategoryId) VALUES (@Description, @Done, @UserId, @CategoryId);
                             SELECT * FROM Todo WHERE TodoId = LAST_INSERT_ID()";
             
             using var connection = GetConnection();
             var todo = connection.QuerySingle<Todo>(sql, 
-                new {Description = newTodo.Description, Done = newTodo.Done, UserId = userId});
+                new {Description = newTodo.Description, Done = newTodo.Done, CategoryId = newTodo.CategoryId, 
+                    UserId = userId, });
             return todo;
         }
 

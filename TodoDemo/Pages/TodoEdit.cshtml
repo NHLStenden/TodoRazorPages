@@ -1,12 +1,25 @@
 @page "{todoId:int}"
 @model TodoDemo.Pages.TodoEdit
 
-
-
 <form method="post">
     <input type="hidden" asp-for="Edit.TodoId">
-    Description: <input asp-for="Edit.Description"><br>
-    Done: <input asp-for="Edit.Done"><br>
+    
+    <div class="form-group">
+        <label asp-for="Edit.Description">Description: </label>
+        <input asp-for="Edit.Description" class="form-control">
+        <span asp-validation-for="Edit.Description"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Edit.CategoryId">Category: </label>
+        <select class="form-control" asp-for="Edit.CategoryId" asp-items="Model.Categories">
+            <option value="">Select a Category</option>
+        </select>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" asp-for="Edit.Done">
+        <label class="form-check-label" asp-for="Edit.Done">Completed</label>
+    </div>
+
     <button type="submit" class="btn btn-primary">Update</button>
     <button type="button" class="btn btn-danger" onclick="history.back()">Cancel</button>
 </form>

@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TodoDemo.Models;
 using TodoDemo.Repositories;
 
@@ -27,9 +30,16 @@ namespace TodoDemo.Pages
                 return -1;
             }
         }
-        
+
+        public IEnumerable<SelectListItem> Categories { get; set; }
+
         public void OnGet([FromRoute] int todoId)
         {
+            Categories = new CategoryRepository().Get(null, UserId)
+                .Select(x => 
+                    new SelectListItem(x.Name, x.CategoryId.ToString())
+                );
+            
             Edit = new TodoRepository().Get(todoId);
         }
 
