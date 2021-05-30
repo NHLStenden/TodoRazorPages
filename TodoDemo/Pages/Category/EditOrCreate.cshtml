@@ -1,0 +1,24 @@
+@page "{categoryId:int?}"
+@model TodoDemo.Pages.Category.EditOrCreate
+
+<form method="post">
+    @if (Model.Mode == EditOrCreate.EditOrCreateMode.Edit)
+    {
+        <input type="hidden" asp-for="Category.CategoryId">    
+    }
+
+    <div class="form-group">
+        <label asp-for="Category.Name">Name: </label>
+        <input asp-for="Category.Name" class="form-control">
+        <span asp-validation-for="Category.Name"></span>
+    </div>
+
+    @if (Model.Mode == EditOrCreate.EditOrCreateMode.Edit)
+    {
+        <button type="submit" class="btn btn-primary" asp-page-handler="update">Update</button>    
+    } else if (Model.Mode == EditOrCreate.EditOrCreateMode.Create)
+    {
+        <button type="submit" class="btn btn-primary" asp-page-handler="create">Create</button>
+    }
+    <a class="btn btn-danger" asp-page="Index">Cancel</a>
+</form>

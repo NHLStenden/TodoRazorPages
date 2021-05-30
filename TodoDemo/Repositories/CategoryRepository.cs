@@ -32,5 +32,51 @@ namespace TodoDemo.Repositories
             using var connection = GetConnection();
             return connection.Query<Category>(sql, new {userId, filter}).ToList();
         }
+
+        public Category GetCategoryByName(string name, int userId)
+        {
+            string sql = @"SELECT * FROM Category 
+                        WHERE Name = @name
+                            AND 
+                        UserId = @userId ORDER BY Name";
+
+            using var connection = GetConnection();
+            return connection.QuerySingleOrDefault<Category>(sql, new {userId, name});
+        }
+        
+        public int Delete(int categoryId)
+        {
+            string sql = @"
+                DELETE FROM Todo WHERE CategoryId = @CategoryId;
+                DELETE FROM Category WHERE CategoryId = @CategoryId;";
+            
+            using var connection = GetConnection();
+            int numRowEffected = connection.Execute(sql, new {CategoryId = categoryId});
+            return numRowEffected;         
+        }
+        
+        public Category Update(Category category, int userId)
+        {
+            category.UserId = userId; //trick
+            string sql = 
+                @"  UPDATE Category 
+                        SET Name = @Name
+                        WHERE CategoryId = @CategoryId AND UserId = @UserId;
+                    SELECT * FROM Category WHERE CategoryId = @CategoryId";
+            using var connection = GetConnection();
+            var updatedCategory = connection.QuerySingle<Category>(sql, category);
+            return updatedCategory;
+        }
+
+        public Category Add(Category category, int userId)
+        {
+            string sql = @"INSERT INTO Category (Name, UserId) VALUES (@Name, @UserId);
+                            SELECT * FROM Category WHERE CategoryId = LAST_INSERT_ID()";
+            
+            using var connection = GetConnection();
+            var addedCategory = connection.QuerySingle<Category>(sql, 
+                new {Name = category.Name, UserId = userId, });
+            return addedCategory;
+        }
     }
 }

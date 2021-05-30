@@ -1,0 +1,10 @@
+@page
+@model TodoDemo.Pages.Category.Delete
+
+
+<h1>Are you sure you want to delete: @Model.Category.Name</h1>
+
+<form method="post">
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-page="Index" class="btn btn-primary">Cancel</a>
+</form>
