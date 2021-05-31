@@ -43,6 +43,14 @@ namespace TodoDemo.Repositories
             using var connection = GetConnection();
             return connection.QuerySingleOrDefault<Category>(sql, new {userId, name});
         }
+
+        public bool CategoryExists(string name, int userId)
+        {
+            string sql = @"SELECT COUNT(1) = 1 FROM Category WHERE Name = @name AND UserId = @userId";
+            
+            using var connection = GetConnection();
+            return connection.ExecuteScalar<bool>(sql, new {name, userId});
+        }
         
         public int Delete(int categoryId)
         {
