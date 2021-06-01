@@ -64,7 +64,7 @@ namespace TodoDemo.Pages
         {
             var todoToDelete = new TodoRepository().Get(todoId, UserId);
             
-            new TodoRepository().Delete(todoId);
+            new TodoRepository().Delete(todoId, UserId);
 
             StatusMessage = $"Deleted Todo \"{todoToDelete.Description}\" with TodoId: {todoToDelete.TodoId}";
         }

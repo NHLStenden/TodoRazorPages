@@ -117,12 +117,12 @@ namespace TodoDemo.Repositories
             return Get(newTodoId, userId);
         }
 
-        public bool Delete(int todoId)
+        public bool Delete(int todoId, int userId)
         {
-            string sql = @"DELETE FROM Todo WHERE TodoId = @TodoId ";
+            string sql = @"DELETE FROM Todo WHERE TodoId = @TodoId AND UserId = @userId";
             
             using var connection = GetConnection();
-            int numRowEffected = connection.Execute(sql, new {TodoId = todoId});
+            int numRowEffected = connection.Execute(sql, new {TodoId = todoId, userId});
             return numRowEffected == 1;         
         }
         

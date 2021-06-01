@@ -21,7 +21,7 @@ namespace TodoDemo.Pages.Category
         {
             if (categoryId != null)
             {
-                Category = new CategoryRepository().Get(categoryId.Value);
+                Category = new CategoryRepository().Get(categoryId.Value, UserId);
                 Mode = EditOrCreateMode.Edit;
             }
             else

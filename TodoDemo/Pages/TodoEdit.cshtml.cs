@@ -36,7 +36,7 @@ namespace TodoDemo.Pages
         {
             get
             {
-                var users = new UserRepository().Get().Select(x => 
+                var users = new UserRepository().GetAllUsers().Select(x => 
                     new SelectListItem(x.Email, x.UserId.ToString(), 
                         Todo.AssignedUserIds.FirstOrDefault(assignedId => assignedId == x.UserId) != null));
 

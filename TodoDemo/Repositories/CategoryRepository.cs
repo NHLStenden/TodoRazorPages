@@ -15,11 +15,11 @@ namespace TodoDemo.Repositories
             return new MySqlConnection(connectionString);
         }
 
-        public Category Get(int categoryId)
+        public Category Get(int categoryId, int userId)
         {
             using var connection = GetConnection();
-            return connection.QuerySingle<Category>("SELECT * FROM Category WHERE CategoryId = @categoryId",
-                new {categoryId});
+            return connection.QuerySingle<Category>("SELECT * FROM Category WHERE CategoryId = @categoryId AND UserId=@userId",
+                new {categoryId, userId});
         }
 
         public IEnumerable<Category> Get(string filter, int userId)
@@ -52,14 +52,14 @@ namespace TodoDemo.Repositories
             return connection.ExecuteScalar<bool>(sql, new {name, userId});
         }
         
-        public int Delete(int categoryId)
+        public int Delete(int categoryId, int userId)
         {
             string sql = @"
-                DELETE FROM Todo WHERE CategoryId = @CategoryId;
-                DELETE FROM Category WHERE CategoryId = @CategoryId;";
+                DELETE FROM Todo WHERE CategoryId = @CategoryId AND UserId = @userId;
+                DELETE FROM Category WHERE CategoryId = @CategoryId AND UserId = @userId;";
             
             using var connection = GetConnection();
-            int numRowEffected = connection.Execute(sql, new {CategoryId = categoryId});
+            int numRowEffected = connection.Execute(sql, new {CategoryId = categoryId, userId});
             return numRowEffected;         
         }
         

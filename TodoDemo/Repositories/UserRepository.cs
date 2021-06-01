@@ -41,7 +41,7 @@ namespace TodoDemo.Repositories
             return addedUser;  
         }
 
-        public IEnumerable<User> Get()
+        public IEnumerable<User> GetAllUsers()
         {
             string sql = @"SELECT * FROM User";
 

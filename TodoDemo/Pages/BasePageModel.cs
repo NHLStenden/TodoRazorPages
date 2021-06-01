@@ -18,6 +18,13 @@ namespace TodoDemo.Pages
                     int userId = int.Parse(userIdStr);
                     return userId;
                 }
+
+                //fixes redirect recursion
+                if (Request.Path.Value != "/Login")
+                {
+                    HttpContext.Response.Redirect("/Login");    
+                }
+                
                 
                 return -1;
             }
