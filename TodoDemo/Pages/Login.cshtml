@@ -1,6 +1,35 @@
 @page
 @model TodoDemo.Pages.Login
 
+
+@{
+    var message = Request.Query["message"].ToString();
+}
+
+@if (!string.IsNullOrWhiteSpace(message))
+{
+    <div class="toast" data-delay="4000">
+        <div class="toast-header">
+            Info
+        </div>
+        <div class="toast-body">
+            @message
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrWhiteSpace(message))
+{
+    @section Scripts {
+         <script type="application/javascript">
+             $(document).ready(function () {
+                 $(".toast").toast('show');
+             });
+         </script>   
+    }
+}
+
+
 @if (Model.UserId == -1)
 {
     <p>Not singed in</p>;
@@ -11,7 +40,23 @@ else
 }     
 
 <form method="post">
-    Login in as <button type="submit" asp-page-handler="loginUser1">User 1</button><br>
-    Login in as <button type="submit" asp-page-handler="loginUser2">User 2</button><br>
-    <button type="submit" asp-page-handler="logout">Log out</button><br>
+    <div class="form-group">
+        <label asp-for="LoginVm.Email"></label>
+        <input asp-for="LoginVm.Email" class="form-control">
+        <span asp-validation-for="LoginVm.Email"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="LoginVm.Password"></label>
+        <input asp-for="LoginVm.Password" class="form-control">
+        <span asp-validation-for="LoginVm.Password"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+<hr>
+<form method="post">
+    Login in as <button type="submit" asp-page-handler="loginUser1" class="btn btn-primary">User 1</button><br>
+    Login in as <button type="submit" asp-page-handler="loginUser2" class="btn btn-primary">User 2</button><br>
+    <hr>
+    <button type="submit" asp-page-handler="logout" class="btn btn-primary">Log out</button><br>
 </form>

@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using TodoDemo.Models;
+using TodoDemo.Repositories;
 
 namespace TodoDemo.Pages
 {
@@ -21,20 +23,46 @@ namespace TodoDemo.Pages
             }
         }
 
-        public void OnGet()
+        [BindProperty] public LoginVm LoginVm { get; set; }
+
+        public IActionResult OnPost()
         {
+            if (!ModelState.IsValid)
+                return Page();
+
+            User user = new UserRepository().CheckLogin(LoginVm);
+            if (user == null)
+            {
+                ModelState.AddModelError("IncorrectEmailPasswordCombination", "Incorrect Email Password combination");
+                return Page();
+            }
+
+            HttpContext.Session.SetString("userid", user.UserId);
+            return RedirectToPage(nameof(TodoList));
         }
 
         public IActionResult OnPostLoginUser1()
         {
-            HttpContext.Session.SetString("userid", 1.ToString());
-            return RedirectToPage(nameof(TodoList));
+            User user = new UserRepository().CheckLogin(new LoginVm() {Email = "joris@test.com", Password = "Test@1234!"});
+            if (user != null)
+            {
+                HttpContext.Session.SetString("userid", user.UserId);
+                return RedirectToPage(nameof(TodoList));                
+            }
+
+            return Page();
         }
         
         public IActionResult OnPostLoginUser2()
         {
-            HttpContext.Session.SetString("userid", 2.ToString());
-            return RedirectToPage(nameof(TodoList));
+            User user = new UserRepository().CheckLogin(new LoginVm() {Email = "joris@test.com", Password = "Test@1234!"});
+            if (user != null)
+            {
+                HttpContext.Session.SetString("userid", user.UserId);
+                return RedirectToPage(nameof(TodoList));                
+            }
+
+            return Page();
         }
 
         public void OnPostLogout()
@@ -42,4 +70,6 @@ namespace TodoDemo.Pages
             HttpContext.Session.Remove("userid");
         }
     }
+
+
 }

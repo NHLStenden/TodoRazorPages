@@ -1,0 +1,22 @@
+@page
+@model TodoDemo.Pages.Register
+
+<form method="post">
+    <div class="form-group">
+        <label asp-for="RegisterUser.Email"></label>
+        <input asp-for="RegisterUser.Email" class="form-control">
+        <span asp-validation-for="RegisterUser.Email"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="RegisterUser.Password"></label>
+        <input asp-for="RegisterUser.Password" class="form-control">
+        <span asp-validation-for="RegisterUser.Password"></span>        
+    </div>
+    <div class="form-group">
+        <label asp-for="RegisterUser.PasswordCheck"></label>
+        <input asp-for="RegisterUser.PasswordCheck" class="form-control">
+        <span asp-validation-for="RegisterUser.PasswordCheck"></span>        
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+    <button asp-page="@nameof(Login)" class="btn btn-primary">Cancel</button>
+</form>
