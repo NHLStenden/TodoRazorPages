@@ -6,23 +6,8 @@ using TodoDemo.Repositories;
 
 namespace TodoDemo.Pages
 {
-    public class Login : PageModel
+    public class Login : BasePageModel
     {
-        public int UserId
-        {
-            get
-            {
-                string userIdStr = HttpContext.Session.GetString("userid");
-                if (!string.IsNullOrWhiteSpace(userIdStr))
-                {
-                    int userId = int.Parse(userIdStr);
-                    return userId;
-                }
-                
-                return -1;
-            }
-        }
-
         [BindProperty] public LoginVm LoginVm { get; set; }
 
         public IActionResult OnPost()
@@ -37,7 +22,7 @@ namespace TodoDemo.Pages
                 return Page();
             }
 
-            HttpContext.Session.SetString("userid", user.UserId);
+            HttpContext.Session.SetString("userid", user.UserId.ToString());
             return RedirectToPage(nameof(TodoList));
         }
 
@@ -46,7 +31,7 @@ namespace TodoDemo.Pages
             User user = new UserRepository().CheckLogin(new LoginVm() {Email = "joris@test.com", Password = "Test@1234!"});
             if (user != null)
             {
-                HttpContext.Session.SetString("userid", user.UserId);
+                HttpContext.Session.SetString("userid", user.UserId.ToString());
                 return RedirectToPage(nameof(TodoList));                
             }
 
@@ -58,7 +43,7 @@ namespace TodoDemo.Pages
             User user = new UserRepository().CheckLogin(new LoginVm() {Email = "joris@test.com", Password = "Test@1234!"});
             if (user != null)
             {
-                HttpContext.Session.SetString("userid", user.UserId);
+                HttpContext.Session.SetString("userid", user.UserId.ToString());
                 return RedirectToPage(nameof(TodoList));                
             }
 

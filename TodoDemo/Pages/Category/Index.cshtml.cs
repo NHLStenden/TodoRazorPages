@@ -7,25 +7,8 @@ using TodoDemo.Models;
 
 namespace TodoDemo.Pages.Category
 {
-    public class Index : PageModel
+    public class Index : BasePageModel
     {
-        public int UserId
-        {
-            get
-            {
-                string userIdStr = HttpContext.Session.GetString("userid");
-                if (!string.IsNullOrWhiteSpace(userIdStr))
-                {
-                    int userId = int.Parse(userIdStr);
-                    return userId;
-                }
-                
-                HttpContext.Response.Redirect(nameof(Index));
-                
-                return -1;
-            }
-        }
-        
         public IEnumerable<Models.Category> Categories
         {
             get

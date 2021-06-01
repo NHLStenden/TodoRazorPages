@@ -1,16 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TodoDemo.Models;
 using TodoDemo.Repositories;
 
 namespace TodoDemo.Pages
 {
-    public class TodoList : PageModel
+    public class TodoList : BasePageModel
     {
         public IEnumerable<Todo> Todos
         {
@@ -28,35 +25,6 @@ namespace TodoDemo.Pages
                 return Request.Query["filter"];
             }
         }
-        
-        public int UserId
-        {
-            get
-            {
-                string userIdStr = HttpContext.Session.GetString("userid");
-                if (!string.IsNullOrWhiteSpace(userIdStr))
-                {
-                    int userId = int.Parse(userIdStr);
-                    return userId;
-                }
-                
-                HttpContext.Response.Redirect(nameof(Login));
-                
-                return -1;
-            }
-        }
-
-        public string StatusMessage
-        {
-            get
-            {
-                return TempData["StatusMessage"]?.ToString();
-            } 
-            set
-            {
-                TempData["StatusMessage"] = value;
-            }
-        }
 
         public IEnumerable<SelectListItem> Categories { get; set; }
 
@@ -70,8 +38,6 @@ namespace TodoDemo.Pages
 
         [BindProperty]
         public Todo NewTodo { get; set; }
-
-        
 
         public void OnPostUpdateCheckbox(int todoId, [FromForm(Name = "todo.Done")] string todoDone)
         {
@@ -96,7 +62,7 @@ namespace TodoDemo.Pages
 
         public void OnPostDelete([FromForm] int todoId)
         {
-            var todoToDelete = new TodoRepository().Get(todoId);
+            var todoToDelete = new TodoRepository().Get(todoId, UserId);
             
             new TodoRepository().Delete(todoId);
 

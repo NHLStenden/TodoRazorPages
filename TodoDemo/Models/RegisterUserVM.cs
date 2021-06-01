@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TodoDemo.Models
 {
-    public class RegisterUserVM
+    public class RegisterUserVm
     {
         [Required, EmailAddress]
         public string Email { get; set; }

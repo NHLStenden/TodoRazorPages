@@ -4,22 +4,11 @@ using TodoDemo.Repositories;
 
 namespace TodoDemo.Pages.Category
 {
-    public class Delete : PageModel
+    public class Delete : BasePageModel
     {
         public Models.Category Category { get; set; }
         
-        public string StatusMessage
-        {
-            get
-            {
-                return TempData["StatusMessage"]?.ToString();
-            } 
-            set
-            {
-                TempData["StatusMessage"] = value;
-            }
-        }
-        
+       
         public void OnGet(int categoryId)
         {
             Category = new CategoryRepository().Get(categoryId);

@@ -7,7 +7,7 @@ namespace TodoDemo.Pages
 {
     public class Register : PageModel
     {
-        [BindProperty] public RegisterUserVM RegisterUser { get; set; }
+        [BindProperty] public RegisterUserVm RegisterUser { get; set; }
         
         public void OnGet()
         {

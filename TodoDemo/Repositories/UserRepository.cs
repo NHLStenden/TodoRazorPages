@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Dapper;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MySql.Data.MySqlClient;
 using TodoDemo.Models;
 
@@ -37,6 +39,14 @@ namespace TodoDemo.Repositories
             using var connection = GetConnection();
             var addedUser = connection.QuerySingle<User>(sql, user);
             return addedUser;  
+        }
+
+        public IEnumerable<User> Get()
+        {
+            string sql = @"SELECT * FROM User";
+
+            using var connection = GetConnection();
+            return connection.Query<User>(sql);
         }
     }
 }

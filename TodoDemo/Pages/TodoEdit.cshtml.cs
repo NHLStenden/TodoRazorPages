@@ -9,48 +9,82 @@ using TodoDemo.Repositories;
 
 namespace TodoDemo.Pages
 {
-    public class TodoEdit : PageModel
+    public class TodoEdit : BasePageModel
     {
         [BindProperty]
-        public Todo Edit { get; set; }
+        public Todo Todo { get; set; }
         
-        public int UserId
+        public EditOrCreateMode Mode { get ; set; }
+        
+        public enum EditOrCreateMode
+        {
+            Edit, Create
+        }
+
+        public IEnumerable<SelectListItem> Categories
         {
             get
             {
-                string userIdStr = HttpContext.Session.GetString("userid");
-                if (!string.IsNullOrWhiteSpace(userIdStr))
-                {
-                    int userId = int.Parse(userIdStr);
-                    return userId;
-                }
-                
-                HttpContext.Response.Redirect(nameof(Login));
-                
-                return -1;
+                return new CategoryRepository().Get(null, UserId)
+                    .Select(x => 
+                        new SelectListItem(x.Name, x.CategoryId.ToString())
+                    );
             }
         }
 
-        public IEnumerable<SelectListItem> Categories { get; set; }
-
-        public void OnGet([FromRoute] int todoId)
+        public IEnumerable<SelectListItem> Users
         {
-            Categories = new CategoryRepository().Get(null, UserId)
-                .Select(x => 
-                    new SelectListItem(x.Name, x.CategoryId.ToString())
-                );
-            
-            Edit = new TodoRepository().Get(todoId);
+            get
+            {
+                var users = new UserRepository().Get().Select(x => 
+                    new SelectListItem(x.Email, x.UserId.ToString(), 
+                        Todo.AssignedUserIds.FirstOrDefault(assignedId => assignedId == x.UserId) != null));
+
+                return users;
+            }
         }
 
-        public IActionResult OnPost()
+        public void OnGet([FromRoute] int? todoId)
         {
-            new TodoRepository().Update(Edit, UserId);
+            if (todoId != null)
+            {
+                Todo = new TodoRepository().Get(todoId.Value, UserId);
+                Mode = EditOrCreateMode.Edit;
+            }
+            else
+            {
+                Todo = new Todo();
+                Mode = EditOrCreateMode.Create;
+            }
+        }
 
-            TempData["updatedObject"] = $"Edited Todo \"{Edit.Description}\" with Id: {Edit.TodoId}";
+        public IActionResult OnPostUpdate()
+        {
+            Mode = EditOrCreateMode.Edit;
+            
+            if (!ModelState.IsValid)
+                return Page();
+            
+            var todo = new TodoRepository().Update(Todo, UserId);
+
+            TempData["updatedObject"] = $"Edited Todo \"{todo.Description}\" with Id: {todo.TodoId}";
             //Response.Cookies.Append("updatedObject", Edit.Description, new CookieOptions());
 
-            return RedirectToPage("TodoList");
+            return RedirectToPage(nameof(TodoList));
+        }
+
+        public IActionResult OnPostCreate()
+        {
+            Mode = EditOrCreateMode.Create;
+            
+            if (!ModelState.IsValid)
+                return Page();
+
+            var todo = new TodoRepository().Add(Todo, UserId);
+
+            TempData["updatedObject"] = $"Todo create \"{todo.Description}\" with Id: {todo.TodoId}";
+            
+            return RedirectToPage(nameof(TodoList));
         }
     }
 }

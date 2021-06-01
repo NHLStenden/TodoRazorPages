@@ -2,25 +2,43 @@
 @model TodoDemo.Pages.TodoEdit
 
 <form method="post">
-    <input type="hidden" asp-for="Edit.TodoId">
+    @if (Model.Mode == TodoEdit.EditOrCreateMode.Edit)
+    {
+        <input type="hidden" asp-for="Todo.TodoId">    
+    }
     
+
     <div class="form-group">
-        <label asp-for="Edit.Description">Description: </label>
-        <input asp-for="Edit.Description" class="form-control">
-        <span asp-validation-for="Edit.Description"></span>
+        <label asp-for="Todo.Description"></label>
+        <input asp-for="Todo.Description" class="form-control">
+        <span asp-validation-for="Todo.Description"></span>
     </div>
     <div class="form-group">
-        <label asp-for="Edit.CategoryId">Category: </label>
-        <select class="form-control" asp-for="Edit.CategoryId" asp-items="Model.Categories">
+        <label asp-for="Todo.CategoryId"></label>
+        <select class="form-control" asp-for="Todo.CategoryId" asp-items="Model.Categories">
             <option value="">Select a Category</option>
         </select>
     </div>
-    <div class="form-check">
-        <input class="form-check-input" asp-for="Edit.Done">
-        <label class="form-check-label" asp-for="Edit.Done">Completed</label>
+
+    <div class="form-group">
+        <label asp-for="Todo.AssignedUserIds"></label>
+        <select class="form-control" asp-for="Todo.AssignedUserIds" asp-items="Model.Users"></select>
     </div>
 
-    <button type="submit" class="btn btn-primary">Update</button>
+    <div class="form-check">
+        <input class="form-check-input" asp-for="Todo.Done">
+        <label class="form-check-label" asp-for="Todo.Done"></label>
+    </div>
+
+    @if (Model.Mode == TodoEdit.EditOrCreateMode.Edit)
+    {
+        <button type="submit" class="btn btn-primary" asp-page-handler="update">Update</button>    
+    }
+    else
+    {
+        <button type="submit" class="btn btn-primary" asp-page-handler="edit">Create</button>   
+    }
+    
     <button type="button" class="btn btn-danger" onclick="history.back()">Cancel</button>
 </form>
 

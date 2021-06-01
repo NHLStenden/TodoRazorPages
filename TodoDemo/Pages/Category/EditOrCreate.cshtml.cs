@@ -5,25 +5,8 @@ using TodoDemo.Repositories;
 
 namespace TodoDemo.Pages.Category
 {
-    public class EditOrCreate : PageModel
+    public class EditOrCreate : BasePageModel
     {
-        public int UserId
-        {
-            get
-            {
-                string userIdStr = HttpContext.Session.GetString("userid");
-                if (!string.IsNullOrWhiteSpace(userIdStr))
-                {
-                    int userId = int.Parse(userIdStr);
-                    return userId;
-                }
-                
-                HttpContext.Response.Redirect(nameof(Index));
-                
-                return -1;
-            }
-        }
-        
         [BindProperty]
         public Models.Category Category { get; set; }
         

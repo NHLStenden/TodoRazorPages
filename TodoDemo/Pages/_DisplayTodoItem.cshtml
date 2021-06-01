@@ -27,11 +27,21 @@
             </div>
             <div class="form-group mx-sm-3">
                 @Model.Description -- @Model.Category.Name
+
+                @if (Model.AssignedUsers.Any())
+                {
+                    @foreach (var assignedUsers in Model.AssignedUsers)
+                    {
+                        <span class="badge badge-secondary">@assignedUsers.Email</span>
+                    }            
+                }
             </div>
-            <div class="btn-group btn-group-sm" role="group" aria-label="Delete | Edit">
+            <div class="btn-group btn-group-sm"  role="group" aria-label="Delete | Edit">
                 <button asp-page-handler="delete" type="submit" class="btn btn-danger">Delete</button>
                 <a asp-page="@nameof(TodoEdit)" asp-route-todoId="@Model.TodoId" class="btn btn-primary">Edit</a>
             </div>
+            
+            <!-- hidden called by jQuery to force submit, see top of file -->
             <button style="display: none" id="updateCheckbox" type="submit" asp-page-handler="updateCheckbox" asp-route-todoId=@Model.TodoId>Update</button>
         </form>
     </li>

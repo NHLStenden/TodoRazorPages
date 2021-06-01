@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS Todo, User, Category;
+DROP TABLE IF EXISTS Todo, User, Category, TodoUser;
 CREATE TABLE User (
     UserId INT PRIMARY KEY AUTO_INCREMENT,
     Email VARCHAR(100) NOT NULL UNIQUE,
@@ -39,17 +39,36 @@ CREATE TABLE Todo
     FOREIGN KEY (CategoryId) REFERENCES Category(CategoryId) 
 );
 
-
 INSERT INTO Todo (Description, Done, UserId, CategoryId) VALUES ('Todo 1', false, @userIdJoris, (SELECT CategoryId FROM Category WHERE Name = 'Category 1' AND UserId = @userIdJoris));
+SET @todo1Id := (SELECT LAST_INSERT_ID());
 INSERT INTO Todo (Description, Done, UserId, CategoryId) VALUES ('Todo 2', true, @userIdJoris, (SELECT CategoryId FROM Category WHERE Name = 'Category 2' AND UserId = @userIdJoris));
 
-
 INSERT INTO Todo (Description, Done, UserId, CategoryId) VALUES ('Todo 3', false, @userIdPiet, (SELECT CategoryId FROM Category WHERE Name = 'Category 3' AND UserId = @userIdPiet));
+SET @todo3Id := (SELECT LAST_INSERT_ID());
 INSERT INTO Todo (Description, Done, UserId, CategoryId) VALUES ('Todo 4', true, @userIdPiet, (SELECT CategoryId FROM Category WHERE Name = 'Category 4' AND UserId = @userIdPiet));
+
+
+CREATE TABLE TodoUser (
+    TodoId INT NOT NULL,
+    UserId Int NOT NULL,
+    PRIMARY KEY (TodoId, UserId),
+    FOREIGN KEY (TodoId) REFERENCES Todo(TodoId),
+    FOREIGN KEY (UserId) REFERENCES User(UserId)
+);
+
+INSERT INTO TodoUser (TodoId, UserId) VALUES (@todo1Id, @userIdPiet);
+INSERT INTO TodoUser (TodoId, UserId) VALUES (@todo1Id, @userIdJoris);
+
+INSERT INTO TodoUser (TodoId, UserId) VALUES (@todo3Id, @userIdJoris);
+INSERT INTO TodoUser (TodoId, UserId) VALUES (@todo3Id, @userIdPiet);
 
 SELECT Description, Done, Name, Email
 FROM Todo t 
     JOIN Category c ON t.CategoryId = c.CategoryId
-    JOIN User u ON t.UserId = u.UserId
+    JOIN User u ON t.UserId = u.UserId;
 
-
+SELECT *
+FROM Todo T 
+    JOIN TodoUser TU ON T.TodoId = TU.TodoId
+        JOIN User U on TU.UserId = U.UserId
+    JOIN Category C on T.CategoryId = C.CategoryId
