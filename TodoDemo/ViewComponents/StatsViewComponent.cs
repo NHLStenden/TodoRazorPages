@@ -12,12 +12,14 @@ namespace TodoDemo.ViewComponents
     {
         public async Task<IViewComponentResult> InvokeAsync(int userId)
         {
-            var todos = new TodoRepository().Get(null, userId);
-            var stats = new Stats()
-            {
-                CompletedCount = todos.Count(x => x.Done),
-                NotCompletedCount = todos.Count(x => !x.Done)
-            };
+            // var todos = new TodoRepository().Get(null, userId);
+            // var stats = new Stats()
+            // {
+            //     CompletedCount = todos.Count(x => x.Done),
+            //     NotCompletedCount = todos.Count(x => !x.Done)
+            // };
+
+            var stats = new TodoRepository().GetStats(userId); 
             
             return View(stats);
         }

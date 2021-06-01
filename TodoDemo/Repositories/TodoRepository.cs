@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Dapper;
@@ -21,7 +22,7 @@ namespace TodoDemo.Repositories
             return connection.QuerySingle<Todo>("SELECT * FROM Todo WHERE TodoId = @todoId",
                 new {todoId});
         }
-        
+
         public IEnumerable<Todo> Get(string filter, int userId)
         {
             string sql = @" SELECT * 
@@ -84,6 +85,19 @@ namespace TodoDemo.Repositories
             using var connection = GetConnection();
             int numRowEffected = connection.Execute(sql, new {TodoId = todoId});
             return numRowEffected == 1;         
+        }
+        
+        
+        public Stats GetStats(int userId)
+        {
+            using var connection = GetConnection();
+
+            string sql = @"SELECT
+                            COUNT(CASE WHEN DONE IS TRUE THEN 1 END) AS CompletedCount,
+                            COUNT(CASE WHEN DONE IS FALSE THEN 1 END) AS NotCompletedCount
+                        FROM Todo WHERE UserId = @userId";
+
+            return connection.QuerySingle<Stats>(sql, new {userId});
         }
     }
 }

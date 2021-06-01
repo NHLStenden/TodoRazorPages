@@ -29,8 +29,11 @@ CREATE TABLE Todo
         PRIMARY KEY,
     Description VARCHAR(100) NOT NULL,
     Done TINYINT(1) DEFAULT 0 NOT NULL,
-    UserId INT NOT NULL REFERENCES User(UserId),
-    CategoryId INT NULL REFERENCES Category(CategoryId)
+    UserId INT NOT NULL,
+    CategoryId INT NOT NULL,
+    
+    FOREIGN KEY (UserId) REFERENCES User(UserId),
+    FOREIGN KEY (CategoryId) REFERENCES Category(CategoryId) 
 );
 
 SET @userId := (SELECT UserId FROM User WHERE UserName = 'Joris');
