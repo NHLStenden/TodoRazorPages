@@ -9,7 +9,7 @@ using TodoDemo.Repositories;
 
 namespace TodoDemo.Pages
 {
-    public class TodoEdit : BasePageModel
+    public class TodoCreateOrEdit : BasePageModel
     {
         [BindProperty]
         public Todo Todo { get; set; }
@@ -38,7 +38,10 @@ namespace TodoDemo.Pages
             {
                 var users = new UserRepository().GetAllUsers().Select(x => 
                     new SelectListItem(x.Email, x.UserId.ToString(), 
-                        Todo.AssignedUserIds.FirstOrDefault(assignedId => assignedId == x.UserId) != null));
+                        Mode == EditOrCreateMode.Create ? false :         
+                            Todo.AssignedUserIds.FirstOrDefault(assignedId => assignedId == x.UserId) != null
+                        )
+                );
 
                 return users;
             }

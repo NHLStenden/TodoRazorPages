@@ -16,6 +16,7 @@ namespace TodoDemo.Pages
                 return Page();
 
             User user = new UserRepository().CheckLogin(LoginVm);
+            //onderstaande code is vervangen door CheckLoginAttribute (custom validation)
             // if (user == null)
             // {
             //     ModelState.AddModelError("LoginVm.Email", "Incorrect Email Password combination");

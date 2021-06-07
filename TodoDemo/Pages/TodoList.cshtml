@@ -16,27 +16,11 @@
 </form>
 <hr>
 
+@nameof(TodoCreateOrEdit)
+<a class="btn btn-primary" asp-page="@nameof(TodoCreateOrEdit)">Add Todo</a>
+
 @foreach (var todo in Model.Todos)
 {
     <partial name="_DisplayTodoItem" model=todo></partial>
 }
-
 <hr>
-<form method="post">
-    <div class="form-group">
-        <label asp-for="NewTodo.Description">Description: </label>
-        <input asp-for="NewTodo.Description" class="form-control">
-        <span asp-validation-for="NewTodo.Description"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="NewTodo.CategoryId">Category: </label>
-        <select class="form-control" asp-for="NewTodo.CategoryId" asp-items="Model.Categories">
-            <option value="">Select a Category</option>
-        </select>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input" asp-for="NewTodo.Done">
-        <label class="form-check-label" asp-for="NewTodo.Done">Completed</label>
-    </div>
-    <button type="submit" asp-page-handler="add" class="btn btn-primary">Add Todo</button>
-</form>

@@ -63,30 +63,27 @@ namespace TodoDemo.Repositories
                 @"  UPDATE Todo 
                         SET Description = @Description, Done = @Done,
                             CategoryId = @CategoryId
-                        WHERE TodoId = @TodoId AND UserId = @UserId;
-                    SELECT * FROM Todo WHERE TodoId = @TodoId";
+                        WHERE TodoId = @TodoId AND UserId = @UserId;";
             using var connection = GetConnection();
 
             int numRowsEffected = connection.Execute(sql, 
                 new {edit.Description, edit.Done, edit.CategoryId, userId, edit.TodoId});
-            if (numRowsEffected != 1)
-                throw new ArgumentException("incorrect todoId, userId combination");
 
-            UpdateTodoUsers(connection, edit);
+            UpdateTodoUsers(connection, edit, edit.TodoId);
 
             return Get(edit.TodoId, userId);
         }
 
-        private void UpdateTodoUsers(MySqlConnection connection, Todo todo)
+        private void UpdateTodoUsers(MySqlConnection connection, Todo todo, int todoId)
         {
             string sqlDeleteTodoUsers = "DELETE FROM TodoUser WHERE TodoId = @TodoId";
-            int numTodoUserDeleted = connection.Execute(sqlDeleteTodoUsers, new {todo.TodoId});
+            int numTodoUserDeleted = connection.Execute(sqlDeleteTodoUsers, new {TodoId = todoId});
 
             string sqlInsertTodoUser = "INSERT INTO TodoUser (TodoId, UserId) VALUES (@todoId, @userId)";
 
             foreach (var assignedUserId in todo.AssignedUserIds)
             {
-                connection.Execute(sqlInsertTodoUser, new {todo.TodoId, userId = assignedUserId});
+                connection.Execute(sqlInsertTodoUser, new {todoId = todoId, userId = assignedUserId});
             }
         }
 
@@ -112,7 +109,7 @@ namespace TodoDemo.Repositories
                 new {Description = newTodo.Description, Done = newTodo.Done, CategoryId = newTodo.CategoryId, 
                     UserId = userId, });
 
-            UpdateTodoUsers(connection, newTodo);
+            UpdateTodoUsers(connection, newTodo, newTodoId);
             
             return Get(newTodoId, userId);
         }

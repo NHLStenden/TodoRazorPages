@@ -54,6 +54,7 @@ namespace TodoDemo
 
             app.UseAuthorization();
 
+            //andere manier om inloggen te realiseren
             // app.Use(async (context, next) =>
             // {
             //     int? userId = context.Session.GetInt32("userid");
