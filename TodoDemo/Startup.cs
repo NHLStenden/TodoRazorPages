@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,8 @@ namespace TodoDemo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+
+           
             services.AddSession();
         }
 
@@ -41,16 +44,35 @@ namespace TodoDemo
                 app.UseHsts();
             }
 
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseSession();
             
             app.UseRouting();
-            
-            
 
             app.UseAuthorization();
+
+            // app.Use(async (context, next) =>
+            // {
+            //     int? userId = context.Session.GetInt32("userid");
+            //     
+            //     string path = context.Request.Path;
+            //     if (path.StartsWith("/Login") && userId == null)
+            //     {
+            //         await next.Invoke();
+            //     }
+            //     
+            //     if (userId.HasValue)
+            //     {
+            //         await next.Invoke();
+            //     }
+            //     else
+            //     {
+            //         context.Response.Redirect("/Login");
+            //     }
+            // });
 
             app.UseEndpoints(endpoints => { endpoints.MapRazorPages(); });
         }

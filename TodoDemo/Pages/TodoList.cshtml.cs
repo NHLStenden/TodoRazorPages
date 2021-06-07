@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TodoDemo.Models;
@@ -28,6 +29,7 @@ namespace TodoDemo.Pages
 
         public IEnumerable<SelectListItem> Categories { get; set; }
 
+        
         public void OnGet()
         {
             Categories = new CategoryRepository().Get(null, UserId)

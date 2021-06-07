@@ -36,17 +36,33 @@ else
     <p>Signed in with userId:  @Model.UserId</p>;
 }     
 
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+    var settings = {
+        validClass: "is-valid",
+        errorClass: "is-invalid"
+    };
+    $.validator.setDefaults(settings);
+    $.validator.unobtrusive.options = settings;
+    </script>
+}
+
 <form method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    
     <div class="form-group">
         <label asp-for="LoginVm.Email"></label>
         <input asp-for="LoginVm.Email" class="form-control">
-        <span asp-validation-for="LoginVm.Email"></span>
+        <span asp-validation-for="LoginVm.Email" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="LoginVm.Password"></label>
         <input asp-for="LoginVm.Password" class="form-control">
-        <span asp-validation-for="LoginVm.Password"></span>
+        <span asp-validation-for="LoginVm.Password" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
 </form>
@@ -57,3 +73,4 @@ else
     <hr>
     <button type="submit" asp-page-handler="logout" class="btn btn-primary">Log out</button><br>
 </form>
+

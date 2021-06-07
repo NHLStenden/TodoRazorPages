@@ -8,6 +8,7 @@ namespace TodoDemo.Pages
     
     public abstract class BasePageModel : PageModel
     {
+        //Better to use middleware
         public int UserId
         {
             get
@@ -28,6 +29,8 @@ namespace TodoDemo.Pages
                 
                 return -1;
             }
+            
+            
         }
         
         public string StatusMessage

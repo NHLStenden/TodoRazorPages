@@ -16,11 +16,11 @@ namespace TodoDemo.Pages
                 return Page();
 
             User user = new UserRepository().CheckLogin(LoginVm);
-            if (user == null)
-            {
-                ModelState.AddModelError("IncorrectEmailPasswordCombination", "Incorrect Email Password combination");
-                return Page();
-            }
+            // if (user == null)
+            // {
+            //     ModelState.AddModelError("LoginVm.Email", "Incorrect Email Password combination");
+            //     return Page();
+            // }
 
             HttpContext.Session.SetString("userid", user.UserId.ToString());
             return RedirectToPage(nameof(TodoList));
